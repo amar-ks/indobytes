@@ -112,7 +112,10 @@ def login(request):
     if 'id' in request.session:
         user_exist  = User.objects.filter(id__exact=request.session['id'], approved=1)
         if user_exist:
-            return HttpResponseRedirect('../dashboard/')
+            context = {
+                'page_header': 'User Dashboard'
+            }
+            return render(request, 'indobytes/dashboard.html', context)
         else:
             del request.session['id']
             return HttpResponseRedirect('/')
@@ -132,8 +135,11 @@ def login(request):
                 if user_details:
                     print(3)
                     request.session['id'] = user_details[0].id
-                    request.session['username'] = user_details[0].username       
-                    return render(request, 'indobytes/dashboard.html')
+                    request.session['username'] = user_details[0].username 
+                    context = {
+                        'page_header': 'User Dashboard'
+                    }      
+                    return render(request, 'indobytes/dashboard.html', context)
                 else:
                     context = {
                         'message': 2,
@@ -157,7 +163,10 @@ def dashboard(request):
     if 'id' in request.session:
         user_exist  = User.objects.filter(id__exact=request.session['id'], approved=1)
         if user_exist:
-            return HttpResponseRedirect('../dashboard/')
+            context = {
+                'page_header': 'User Dashboard'
+            }
+            return render(request, 'indobytes/dashboard.html', context)
         else:
             del request.session['id']
             return HttpResponseRedirect('/')
