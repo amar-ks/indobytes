@@ -1,0 +1,301 @@
+{% extends 'indobytes/base.html' %}
+{% block title %}Sign Up{% endblock %}
+{% block register_active %}active{% endblock %}
+
+{% block body %}
+
+    <form id="frmCMS" name="frmCMS" class="form-horizontal" action='' method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset>
+        <div id="legend">
+        <legend class="">Register</legend>
+        </div>
+
+        <div class="control-group" id="alert_div">
+			<div class="col-md-12">
+				<div class="alert alert-danger" role="alert" id="billError">
+				  This is a danger alert—check it out!
+				</div>
+			</div>
+		</div>
+
+        <div class="control-group">
+        <!-- name -->
+        <label class="control-label"  for="name">Name</label>
+        <div class="controls">
+            <input type="text" id="name" name="name" placeholder="" class="input-xlarge">
+        </div>
+        </div>
+    
+        <div class="control-group">
+        <!-- E-mail -->
+        <label class="control-label" for="email">E-mail</label>
+        <div class="controls">
+            <input type="email" id="email" name="email" placeholder="" class="input-xlarge" onkeyup="validate_email()">
+            <p class="help-block">Please provide your E-mail</p>
+        </div>
+        </div>
+
+        <div class="control-group">
+        <!-- Username -->
+        <label class="control-label"  for="username">Username</label>
+        <div class="controls">
+            <input type="text" id="username" name="username" placeholder="" class="input-xlarge" onkeyup="validate_username()" autocomplete="false" >
+            
+        </div>
+        </div>
+    
+        <div class="control-group">
+        <!-- Password-->
+        <label class="control-label" for="password">Password</label>
+        <div class="controls">
+            <input type="password" id="password" name="password" placeholder="" class="input-xlarge" minlength=8 autocomplete="new-password">
+            <!--<p class="help-block">Password should be at least 8 characters</p>-->
+        </div>
+        </div>
+    
+        <div class="control-group">
+        <!-- Password -->
+        <label class="control-label"  for="password_confirm">Password (Confirm)</label>
+        <div class="controls">
+            <input type="password" id="password_confirm" name="password_confirm" placeholder="" class="input-xlarge" minlength=8>
+            <p class="help-block">Please confirm password</p>
+        </div>
+        </div>
+
+        <div class="controls">
+			<script src='https://www.google.com/recaptcha/api.js'></script>
+			<div class="g-recaptcha" data-sitekey="6LdTAbMUAAAAAOXL14qgK_1aBRobwBT5LpzM8_uK" data-callback="enableBtn"></div>
+		</div>
+    
+        <div class="control-group">
+        <!-- Button -->
+        <div class="controls">
+            <button type="submit" id="btnSubmit" class="btn btn-success">Register</button>
+        </div>
+        </div>
+    </fieldset>
+        <input type="hidden" id="email_valid" value="no" />
+		<input type="hidden" id="username_valid" value="no" />
+		<input type="hidden" name="message" id="message" value="{{message}}">
+    </form>
+
+<style type="text/css">
+.error{ font-weight: normal; color:#ef5350 !important;}
+</style>
+
+<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.min.js"></script>
+
+<script type="text/javascript">
+
+	
+//----------------------------//
+function error_css(){
+    $("#billError").addClass("alert-danger");
+    $("#billError").removeClass("alert-success");
+    $("#billError").html("");
+    $("#alert_div").hide();
+}
+//----------------------------//
+function success_css(){
+	$("#billError").removeClass("alert-danger");
+    $("#billError").addClass("alert-success");
+    $("#billError").html("");
+    $("#alert_div").hide();
+}
+function alrtclse()
+{
+	$("#billError").html("");
+    $("#alert_div").hide();
+}
+//----------------------------//
+
+$(document).ready(function(e){
+	
+	//----------------------------//
+	setTimeout(alrtclse, 5000);
+	//----------------------------//
+	var message = $("#message").val();
+	if(message == 0){
+		$("#billError").html("");
+    	$("#alert_div").hide();
+	}
+	if(message == 1){
+		success_css();
+		$("#billError").html("Registration successfully submitted");
+    	$("#alert_div").show();
+	}
+	if(message == 2){
+		success_css();
+		$("#billError").html("Email id already exists.");
+    	$("#alert_div").show();
+	}
+	if(message == 3){
+		success_css();
+		$("#billError").html("All fields are required.");
+    	$("#alert_div").show();
+	}
+	if(message == 4){
+		success_css();
+		$("#billError").html("Username id already exists.");
+    	$("#alert_div").show();
+	}
+	if(message == 5){
+		success_css();
+		$("#billError").html("Passwords do not match.");
+    	$("#alert_div").show();
+	}
+	//----------------------------//
+
+	$("#btnSubmit").click(function(e){
+        
+        // $("#frmCMS").submit();
+	  var password = $("#password").val();
+      var password_confirm = $("#password_confirm").val();
+	  if (password != password_confirm) {
+		alert("Passwords do not match.");
+		return false;
+	  }
+	  return true;
+    });
+
+ 	$('form').on('submit', function(e) {
+	  if(grecaptcha.getResponse() == "") {
+	    e.preventDefault();
+	     // alert("Please check the recaptcha!");
+	  } 
+
+	  
+	});
+
+    //----------------------------//
+    $("#frmCMS").validate({
+        rules: {
+            name:{
+               required: true               
+            }, 
+            email:{
+               required: true,
+               email: true              
+            },
+            username:{
+            	required: true,
+            },
+            password:{
+            	required: true
+            },
+            password_confirm:{
+            	required: true
+            },
+            
+        },
+
+        messages: {
+	      name: "Please enter name",
+	      email: "Please enter a valid email address",
+	      username: "Please enter username",
+	      password: "Password should be at least 8 characters",
+	      password_confirm: "Please enter confirm password",
+
+	    },
+    });
+    //----------------------------//
+});
+
+//----------------Validate Email-------------------------//
+function validate_email()
+	{
+	    $("#loginError").html('');
+	    $("#alert_div").hide();
+
+	    var email = $("#email").val();
+	    $("#loaderdiv").show();
+	    $("#email_valid").val('no');
+	
+	    $.ajax({
+	        type:"POST",
+	        url:"/validate_email/",
+	        data:{email:email, csrfmiddlewaretoken:'{{ csrf_token }}'},
+	        success:function(response){
+	            if(response.message==2){
+	                $("#email_valid").val('yes');
+
+					//$("#billError").removeClass("alert-danger");
+	               // $("#billError").addClass("alert-success");
+					//$("#billError").html("Valid Email id");
+	                //$("#alert_div").show();
+	            }
+	            if(response.message==1){
+	                                          
+	                //$("#billError").removeClass("alert-danger");
+	                //$("#billError").addClass("alert-success");
+	                $("#billError").html("Email Id already exists");
+	                $("#alert_div").show();
+	                
+	            }                    
+	            $("#loaderdiv").hide();
+	        },
+	        error:function(xhr){
+	            //$("#billError").html("Database error");
+	            //$("#alert_div").show();
+	            $("#loaderdiv").hide();
+	        }
+	    })
+	}
+
+	//-----------------Username Validation-----------//
+	function validate_username()
+	{
+	    $("#loginError").html('');
+	    $("#alert_div").hide();
+
+	    var username = $("#username").val();
+	    $("#loaderdiv").show();
+	    $("#username_valid").val('no');
+	
+	    $.ajax({
+	        type:"POST",
+	        url:"/validate_username/",
+	        data:{username:username, csrfmiddlewaretoken:'{{ csrf_token }}'},
+	        success:function(response){
+	            if(response.message==2){
+	                $("#username_valid").val('yes');
+
+					//$("#billError").removeClass("alert-danger");
+	                //$("#billError").addClass("alert-success");
+					//$("#billError").html("Valid Username");
+	                //$("#alert_div").show();
+	            }
+	            if(response.message==1){
+	                                          
+	                //$("#billError").removeClass("alert-danger");
+	                //$("#billError").addClass("alert-success");
+	                $("#billError").html("Username already exists");
+	                $("#alert_div").show();
+	                
+	            }                    
+	            $("#loaderdiv").hide();
+	        },
+	        error:function(xhr){
+	            //$("#billError").html("Database error");
+	            //$("#alert_div").show();
+	            $("#loaderdiv").hide();
+	        }
+	    })
+	}
+//------------------Username no spaces------//
+$("input#username").on({
+  keydown: function(e) {
+    if (e.which === 32)
+      return false;
+  },
+  change: function() {
+    this.value = this.value.replace(/\s/g, "");
+  }
+});
+
+</script>
+{% endblock body %}
+
+

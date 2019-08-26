@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}IndoBytes{% endblock %}</title>
+    {% load staticfiles %}
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+</head>
+<body>
+{% if request.session.id %}
+    <ul class="nav nav-pills nav-stacked">
+        <li class="{% block cpass_active %}{% endblock %}"><a href="#">Change Password</a></li>
+        <li class=""><a  href="{% url 'indobytes:logout' %}">Signout</a></li>
+    </ul>
+{% else %}
+    <ul class="nav nav-pills nav-stacked">
+        <li class="{% block register_active %}{% endblock %}"><a href="{% url 'indobytes:index' %}">Registration</a></li>
+        <li class="{% block login_active %}{% endblock %}"><a  href="{% url 'indobytes:login' %}">Login</a></li>
+    </ul>
+{% endif %}
+    {% block body %}
+    {% endblock %}
+
+</body>
+</html>
