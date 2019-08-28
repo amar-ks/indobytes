@@ -9,7 +9,7 @@
 {% block body %}
 
     <div class="container">
-  <h2><a  href="{% url 'indobytes:admin_dashboard' %}">{{page_header}}</h2></a>
+  <h2><a  href="{% url 'indobytes:admin_dashboard' %}">{{page_header}} - {{ request.session.username }}</h2></a>
   <p><b>Total user: {{ total_users }}</b></p>            
   <table class="table">
     <thead>
@@ -29,7 +29,10 @@
                 <td>{{ user_detail.name }}</td>
                 <td>{{ user_detail.email }}</td>
                 <td>{{ user_detail.username }}</td>
-                <td></td>
+                <td>
+                <a class="mr-1" data-toggle="tooltip" data-placement="bottom" title="Edit" href="javascript:void(0)" onclick="regulation_remove({{user_detail.id}})">Edit</a> | 
+                <a class="mr-1" data-toggle="tooltip" data-placement="bottom" title="Delete" href="javascript:void(0)" onclick="user_remove({{user_detail.id}})">Delete</a>
+                </td>
             </tr>
         {% endfor %}
     {% else %}
