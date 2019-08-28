@@ -1,0 +1,162 @@
+{% extends 'indobytes/base_admin.html' %}
+{% block title %}Admin Log In{% endblock %}
+{% block login_active %}active{% endblock %}
+
+{% block body %}
+<form id="frmCMS" name="frmCMS" class="form-horizontal" action='' method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset>
+        <div id="legend">
+        <legend class="">{{ page_header }}</legend>
+        </div>
+
+        <div class="control-group" id="alert_div">
+			<div class="col-md-12">
+				<div class="alert alert-danger" role="alert" id="billError">
+				  This is a danger alert—check it out!
+				</div>
+			</div>
+		</div>
+
+
+        <div class="control-group">
+        <!-- Username -->
+        <label class="control-label"  for="username">Username</label>
+        <div class="controls">
+            <input type="text" id="username" name="username" placeholder="" class="input-xlarge" autocomplete="false" >
+            
+        </div>
+        </div>
+    
+        <div class="control-group">
+        <!-- Password-->
+        <label class="control-label" for="password">Password</label>
+        <div class="controls">
+            <input type="password" id="password" name="password" placeholder="" class="input-xlarge" minlength=8 autocomplete="new-password">
+            <!--<p class="help-block">Password should be at least 8 characters</p>-->
+        </div>
+        </div>
+
+        <div class="controls">
+			<script src='https://www.google.com/recaptcha/api.js'></script>
+			<div class="g-recaptcha" data-sitekey="6LdTAbMUAAAAAOXL14qgK_1aBRobwBT5LpzM8_uK" data-callback="enableBtn"></div>
+		</div>
+    
+        <div class="control-group">
+        <!-- Button -->
+        <div class="controls">
+            <button type="submit" id="btnSubmit" class="btn btn-success">Register</button>
+        </div>
+        </div>
+    </fieldset>
+        <input type="hidden" id="email_valid" value="no" />
+		<input type="hidden" id="username_valid" value="no" />
+		<input type="hidden" name="message" id="message" value="{{message}}">
+    </form>
+
+    <!------------------------------------------->
+
+    <style type="text/css">
+.error{ font-weight: normal; color:#ef5350 !important;}
+</style>
+
+<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.min.js"></script>
+
+<script type="text/javascript">
+
+	
+//----------------------------//
+function error_css(){
+    $("#billError").addClass("alert-danger");
+    $("#billError").removeClass("alert-success");
+    $("#billError").html("");
+    $("#alert_div").hide();
+}
+//----------------------------//
+function success_css(){
+	$("#billError").removeClass("alert-danger");
+    $("#billError").addClass("alert-success");
+    $("#billError").html("");
+    $("#alert_div").hide();
+}
+function alrtclse()
+{
+	$("#billError").html("");
+    $("#alert_div").hide();
+}
+//----------------------------//
+
+$(document).ready(function(e){
+	
+	//----------------------------//
+	setTimeout(alrtclse, 5000);
+	//----------------------------//
+	var message = $("#message").val();
+	if(message == 0){
+		$("#billError").html("");
+    	$("#alert_div").hide();
+	}
+	if(message == 1){
+		success_css();
+		$("#billError").html("Username or Password does not match.");
+    	$("#alert_div").show();
+	}
+	if(message == 2){
+		success_css();
+		$("#billError").html("Access Denied.");
+    	$("#alert_div").show();
+	}
+	
+	
+	//----------------------------//
+
+	//$("#btnSubmit").click(function(e){
+        //$("#frmCMS").submit();
+    //});
+
+ 	$('form').on('submit', function(e) {
+	  if(grecaptcha.getResponse() == "") {
+	    e.preventDefault();
+	     // alert("Please check the recaptcha!");
+	  } 
+
+	  
+	});
+
+    //----------------------------//
+    $("#frmCMS").validate({
+        rules: {
+            username:{
+            	required: true,
+            },
+            password:{
+            	required: true
+            },
+            
+        },
+
+        messages: {
+	      username: "Please enter username",
+	      password: "Password should be at least 8 characters",
+	    },
+    });
+    //----------------------------//
+});
+
+	
+//------------------Username no spaces------//
+$("input#username").on({
+  keydown: function(e) {
+    if (e.which === 32)
+      return false;
+  },
+  change: function() {
+    this.value = this.value.replace(/\s/g, "");
+  }
+});
+
+</script>
+
+{% endblock %}
+

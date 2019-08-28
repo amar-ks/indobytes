@@ -3,7 +3,9 @@
 
 
 {% block body %}
-    {{page_header}}
+    <a  href="{% url 'indobytes:dashboard' %}">{{page_header}}</a>
+    <hr>
+    Total users: {{ total_users }}
 
 {% endblock %}
 

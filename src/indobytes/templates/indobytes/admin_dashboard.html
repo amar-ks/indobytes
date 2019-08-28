@@ -1,0 +1,44 @@
+{% extends 'indobytes/base_admin.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+{% block body %}
+
+    <div class="container">
+  <h2><a  href="{% url 'indobytes:admin_dashboard' %}">{{page_header}}</h2></a>
+  <p><b>Total user: {{ total_users }}</b></p>            
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Sl No.</th>
+        <th>Name</th>
+        <th>Email ID</th>
+        <th>Username</th>
+        <th> Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% if user_details %}
+        {% for user_detail in user_details %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ user_detail.name }}</td>
+                <td>{{ user_detail.email }}</td>
+                <td>{{ user_detail.username }}</td>
+                <td></td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <tr><td colspan=5>No records available</td></tr>
+    {% endif %}
+      
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+

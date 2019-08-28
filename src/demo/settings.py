@@ -135,3 +135,10 @@ MEDIA_URL = '/media/'
 
 NORECAPTCHA_SITE_KEY = '6LdTAbMUAAAAAOXL14qgK_1aBRobwBT5LpzM8_uK'
 NORECAPTCHA_SECRET_KEY = '6LdTAbMUAAAAAGc3KoDJ1GPhoTwqZ1_mXBKVjdir'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'meetamarkumar@gmail.com'
+EMAIL_HOST_PASSWORD = 'ndqxxtrvtzxtzkzj'
