@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    
 
 {% block body %}
 
@@ -30,8 +31,28 @@
                 <td>{{ user_detail.email }}</td>
                 <td>{{ user_detail.username }}</td>
                 <td>
-                <a class="mr-1" data-toggle="tooltip" data-placement="bottom" title="Edit" href="javascript:void(0)" onclick="regulation_remove({{user_detail.id}})">Edit</a> | 
-                <a class="mr-1" data-toggle="tooltip" data-placement="bottom" title="Delete" href="javascript:void(0)" onclick="user_remove({{user_detail.id}})">Delete</a>
+                <a class="mr-1" data-toggle="tooltip" data-placement="bottom" title="Edit" href="javascript:void(0)" onclick="regulation_remove({{user_detail.id}})">Edit</a> |
+
+                <form action="{% url 'indobytes:delete_user' user_detail.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-xs" data-confirm="Are you sure you want to click the button?">
+                    <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
+                    </button>
+                
+                </form>
+
+                <form action="{% url 'indobytes:is_active' user_detail.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-xs" data-confirm="Are you sure you want to click the button?">
+                    {% ifequal user_detail.approved 1 %}
+                    <span class="glyphicon glyphicon-remove"></span>&nbsp; Deactivate
+                    {% else %}
+                    <span class="glyphicon glyphicon-remove"></span>&nbsp; Activate
+                    {% endifequal %}
+                    </button>
+                
+                </form>
+
                 </td>
             </tr>
         {% endfor %}
@@ -43,5 +64,20 @@
   </table>
 </div>
 
+<script type="text/javascript">
+$(document).on('click', ':not(form)[data-confirm]', function(e){
+    if(!confirm($(this).data('confirm'))){
+      e.stopImmediatePropagation();
+      e.preventDefault();
+		}
+});
+
+$(document).on('submit', 'form[data-confirm]', function(e){
+    if(!confirm($(this).data('confirm'))){
+    	e.stopImmediatePropagation();
+      e.preventDefault();
+		}
+});
+</script>
 {% endblock %}
 

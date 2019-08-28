@@ -311,3 +311,42 @@ def activate(request, uid):
             )
             return HttpResponse("Account Activated")
     return HttpResponse("Activation failed")
+
+def delete_user(request, user_id):
+    if 'id' in request.session:
+        user_exist  = User.objects.filter(id__exact=request.session['id'], is_superuser=1, is_staff=1, is_active=1, approved=1)
+        if user_exist:
+            get_user = User.objects.get(pk=user_id)
+            if get_user:
+                get_user = User.objects.get(pk=user_id)
+                get_user.delete()
+            return HttpResponseRedirect('../../admin_dashboard/')
+        else:
+            del request.session['id']
+            return HttpResponseRedirect('../admin_login/')
+        
+    
+    return HttpResponseRedirect('../admin_login/')
+
+def is_active(request, user_id):
+    if 'id' in request.session:
+        user_exist  = User.objects.filter(id__exact=request.session['id'], is_superuser=1, is_staff=1, is_active=1, approved=1)
+        if user_exist:
+            get_user = User.objects.get(pk=user_id)
+            if get_user:
+                getuser = User.objects.filter(pk=user_id)
+                if get_user.approved == 1:
+                    getuser.update(
+                        approved=0
+                    )
+                else:
+                    getuser.update(
+                        approved=1
+                    )
+            return HttpResponseRedirect('../../admin_dashboard/')
+        else:
+            del request.session['id']
+            return HttpResponseRedirect('../admin_login/')
+        
+    
+    return HttpResponseRedirect('../admin_login/')

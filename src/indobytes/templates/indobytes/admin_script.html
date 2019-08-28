@@ -1,0 +1,100 @@
+<script type="text/javascript">
+function regulation_remove(regulation_id)
+{    
+    $("#delRegulationModal").show();
+    $("#delCMdelRegulationModalSModal").addClass('in');
+    $("#delRegulationModal").css('opacity','1');
+    $('body').addClass('modal-open');
+    $('body').append('<div class="modal-backdrop fade in" style="opacity:0.7;"></div>');
+    $("#del_regulation_id").val(regulation_id);
+    // console.log(val(regulation_id))
+}
+
+function call_delete_regulation()
+{     
+    regulation_id = $("#del_regulation_id").val();
+    $("#loaderdiv").show();
+    $.ajax({
+        type:"POST",
+        url:"../regulation_remove/",
+        data:{regulation_id:regulation_id, csrfmiddlewaretoken:'{{ csrf_token }}'},
+        success:function(response){
+            if(response.message==1){
+                    $("#loaderdiv").hide();
+                    cancel_delete();
+                    window.location.href = '/admin/regulations';          
+            }else{
+                cancel_delete();
+                $("#loaderdiv").hide();
+            }
+            $("#loaderdiv").hide();
+            cancel_delete();
+        },
+        error:function(xhr){
+            cancel_delete();
+            $("#loaderdiv").hide();
+        }            
+    })    
+}
+
+function cancel_delete()
+{
+    $("#delRegulationModal").hide();
+    $("#delRegulationModal").removeClass('in');
+    $('body').removeClass('modal-open');
+    $( ".modal-backdrop" ).remove();
+}
+
+function regulation_edit(regulation_id)
+{
+    window.location.href = '/admin/regulation_edit/'+regulation_id; 
+}
+$(document).ready(function(e){
+
+    $("#btnRegAdd").click(function(e){
+        window.location.href = '/admin/regulation_add';
+    });
+  	//----------------------------------//
+    $('#cms_search_box').on('keyup',function(){
+        var searchTerm = $(this).val().toLowerCase();
+        if(searchTerm != ''){
+            //-------------------------------//
+            $("#awb-tbl").show();
+            $("#pgn-tbl").hide();
+            $("#lx_pagination_bar").hide();
+            $("#awb_tbl_no_search_data_td").html("");
+            $("#awb_tbl_no_search_data").hide();
+            var count = 0;
+            //-------------------------------//
+            $('#awb-tbl tbody tr').each(function(){
+                //---------------------------------//                
+                var lineStr = $(this).text().toLowerCase();
+                if(lineStr.indexOf(searchTerm) === -1){
+                    $(this).hide();
+                }else{
+                    $(this).show();
+                    count = count + 1;
+                }
+            });
+            console.log('count'+count);
+            if(count == 0){
+                $("#awb_tbl_no_search_data_td").html("No Record Found!");
+                $("#awb_tbl_no_search_data").show();
+            }
+            else{
+                $("#awb_tbl_no_search_data_td").html("");
+                $("#awb_tbl_no_search_data").hide();
+            }
+        }else{
+            //-------------------------------//
+            $("#awb_tbl_no_search_data_td").html("");
+            $("#awb_tbl_no_search_data").hide();
+            $("#awb-tbl").hide();
+            $("#pgn-tbl").show();
+            $("#lx_pagination_bar").show();
+            //-------------------------------//
+        }
+    });  
+    //----------------------------------//
+});
+</script>
